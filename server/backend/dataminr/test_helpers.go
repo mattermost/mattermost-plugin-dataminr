@@ -19,7 +19,7 @@ func (m *MockPoster) PostAlert(alert backend.Alert, channelID string) error {
 
 // MockDeduplicator is a mock implementation of backend.Deduplicator for testing
 type MockDeduplicator struct {
-	RecordAlertFn func(backendType, alertID string) bool
+	RecordAlertFn func(backendType, alertID, channelID string) bool
 	seenAlerts    map[string]bool
 }
 
@@ -31,12 +31,12 @@ func NewMockDeduplicator() *MockDeduplicator {
 }
 
 // RecordAlert calls the mock function or uses default behavior
-func (m *MockDeduplicator) RecordAlert(backendType, alertID string) bool {
+func (m *MockDeduplicator) RecordAlert(backendType, alertID, channelID string) bool {
 	if m.RecordAlertFn != nil {
-		return m.RecordAlertFn(backendType, alertID)
+		return m.RecordAlertFn(backendType, alertID, channelID)
 	}
 	// Default behavior: track in-memory
-	key := backendType + ":" + alertID
+	key := backendType + ":" + alertID + ":" + channelID
 	if _, exists := m.seenAlerts[key]; exists {
 		return false
 	}
