@@ -68,10 +68,13 @@ describe('BackendSettings', () => {
         expect(wrapper.find(BackendList).prop('backends')).toEqual([backend]);
     });
 
-    it('should handle undefined value prop', () => {
-        const wrapper = shallow(<BackendSettings {...baseProps}/>);
+    it('should render empty state when value is undefined', () => {
+        const wrapper = shallow(
+            <BackendSettings {...baseProps} value={undefined}/>,
+        );
 
         expect(wrapper.find(NoBackendsPage)).toHaveLength(1);
+        expect(wrapper.find(BackendList)).toHaveLength(0);
     });
 
     it('should parse backends from a JSON string value', () => {

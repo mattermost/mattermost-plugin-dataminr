@@ -1,4 +1,4 @@
-// Copyright (c) 2023-present Mattermost, Inc. All Rights Reserved.
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
 import React from 'react';
@@ -8,22 +8,12 @@ import {PlusIcon} from '@mattermost/compass-icons/components';
 
 import BackendCard from './BackendCard';
 import {TertiaryButton} from './buttons';
+import {createDefaultBackend} from './default_backend';
 import type {BackendConfig, BackendStatus} from './types';
 import {mergeBackendStatus} from './types';
 import type {ValidationErrors} from './validation';
 
 import {newBackendUUID} from '../../../utils/random_id';
-
-const defaultNewBackend: Omit<BackendConfig, 'id'> = {
-    name: '',
-    type: 'dataminr',
-    enabled: true,
-    url: 'https://firstalert-api.dataminr.com',
-    apiId: '',
-    apiKey: '',
-    channelId: '',
-    pollIntervalSeconds: 30,
-};
 
 type Props = {
     backends: BackendConfig[];
@@ -36,13 +26,7 @@ const BackendList = (props: Props) => {
     const addNewBackend = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         const id = newBackendUUID();
-        props.onChange([
-            ...props.backends,
-            {
-                ...defaultNewBackend,
-                id,
-            },
-        ]);
+        props.onChange([...props.backends, createDefaultBackend(id)]);
     };
 
     const onChange = (newBackend: BackendConfig) => {

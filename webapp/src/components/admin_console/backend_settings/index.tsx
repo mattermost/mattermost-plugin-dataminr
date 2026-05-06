@@ -1,15 +1,16 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useMemo} from 'react';
 import styled from 'styled-components';
 
 import BackendList from './BackendList';
+import {createDefaultBackend} from './default_backend';
 import NoBackendsPage from './NoBackendsPage';
 import {normalizeBackendsValue} from './normalize_backends_value';
 import type {BackendConfig} from './types';
 import {useBackendStatus} from './useBackendStatus';
-import {validateBackendConfig, hasValidationErrors, type ValidationErrors} from './validation';
+import {collectBackendValidationErrors, type ValidationErrors} from './validation';
 
 import {newBackendUUID} from '../../../utils/random_id';
 
@@ -17,7 +18,7 @@ type Props = {
     id: string;
     label: string;
     helpText: React.ReactNode;
-    value: unknown;
+    value?: unknown;
     disabled: boolean;
     config?: any;
     currentState?: any;
@@ -30,7 +31,7 @@ type Props = {
 };
 
 const BackendSettings = (props: Props) => {
-    const backends = normalizeBackendsValue(props.value);
+    const backends = useMemo(() => normalizeBackendsValue(props.value), [props.value]);
     const {statusMap} = useBackendStatus();
 
     // Validation errors shown after save attempt or on component mount
@@ -55,19 +56,8 @@ const BackendSettings = (props: Props) => {
             return;
         }
 
-        // Validate all backends
-        const errors: Record<string, ValidationErrors> = {};
-        let hasErrors = false;
-
-        backends.forEach((backend) => {
-            const backendErrors = validateBackendConfig(backend, backends);
-            if (hasValidationErrors(backendErrors)) {
-                errors[backend.id] = backendErrors;
-                hasErrors = true;
-            }
-        });
-
-        if (hasErrors) {
+        const errors = collectBackendValidationErrors(backends);
+        if (Object.keys(errors).length > 0) {
             setValidationErrors(errors);
         }
     }, [backends]);
@@ -79,19 +69,8 @@ const BackendSettings = (props: Props) => {
         }
 
         const saveAction = async () => {
-            // Validate all backends
-            const errors: Record<string, ValidationErrors> = {};
-            let hasErrors = false;
-
-            backends.forEach((backend) => {
-                const backendErrors = validateBackendConfig(backend, backends);
-                if (hasValidationErrors(backendErrors)) {
-                    errors[backend.id] = backendErrors;
-                    hasErrors = true;
-                }
-            });
-
-            if (hasErrors) {
+            const errors = collectBackendValidationErrors(backends);
+            if (Object.keys(errors).length > 0) {
                 setValidationErrors(errors);
                 return {error: {message: 'Please fix validation errors before saving'}};
             }
@@ -105,19 +84,7 @@ const BackendSettings = (props: Props) => {
     }, [backends, props.registerSaveAction, props.unRegisterSaveAction]);
 
     const handleAddBackend = () => {
-        const id = newBackendUUID();
-        const newBackend: BackendConfig = {
-            id,
-            name: '',
-            type: 'dataminr',
-            enabled: true,
-            url: 'https://firstalert-api.dataminr.com',
-            apiId: '',
-            apiKey: '',
-            channelId: '',
-            pollIntervalSeconds: 30,
-        };
-        handleBackendsChange([...backends, newBackend]);
+        handleBackendsChange([...backends, createDefaultBackend(newBackendUUID())]);
     };
 
     // Empty state: no backends configured

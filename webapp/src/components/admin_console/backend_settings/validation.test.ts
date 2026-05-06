@@ -10,6 +10,7 @@ import {
     isValidPollInterval,
     validateBackendConfig,
     hasValidationErrors,
+    collectBackendValidationErrors,
     validateField,
 } from './validation';
 
@@ -276,6 +277,51 @@ describe('validation utilities', () => {
 
         it('should return false if no errors exist', () => {
             expect(hasValidationErrors({})).toBe(false);
+        });
+    });
+
+    describe('collectBackendValidationErrors', () => {
+        it('should return empty object when all backends are valid', () => {
+            const backends: BackendConfig[] = [{
+                id: '550e8400-e29b-41d4-a716-446655440000',
+                name: 'A',
+                type: 'dataminr',
+                enabled: true,
+                url: 'https://api.example.com',
+                apiId: 'id',
+                apiKey: 'key',
+                channelId: 'ch',
+                pollIntervalSeconds: 30,
+            }];
+            expect(collectBackendValidationErrors(backends)).toEqual({});
+        });
+
+        it('should include only backends with validation errors', () => {
+            const invalid: BackendConfig = {
+                id: '550e8400-e29b-41d4-a716-446655440000',
+                name: '',
+                type: 'dataminr',
+                enabled: true,
+                url: 'https://api.example.com',
+                apiId: 'id',
+                apiKey: 'key',
+                channelId: 'ch',
+                pollIntervalSeconds: 30,
+            };
+            const valid: BackendConfig = {
+                id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+                name: 'OK',
+                type: 'dataminr',
+                enabled: true,
+                url: 'https://api.example.com',
+                apiId: 'id2',
+                apiKey: 'key2',
+                channelId: 'ch2',
+                pollIntervalSeconds: 30,
+            };
+            const collected = collectBackendValidationErrors([invalid, valid]);
+            expect(Object.keys(collected)).toEqual([invalid.id]);
+            expect(collected[invalid.id]?.name).toBe('Name is required');
         });
     });
 
