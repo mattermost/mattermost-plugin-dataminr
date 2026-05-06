@@ -74,6 +74,38 @@ describe('BackendSettings', () => {
         expect(wrapper.find(NoBackendsPage)).toHaveLength(1);
     });
 
+    it('should parse backends from a JSON string value', () => {
+        const backend: BackendConfig = {
+            id: '550e8400-e29b-41d4-a716-446655440000',
+            name: 'From JSON',
+            type: 'dataminr',
+            enabled: true,
+            url: 'https://api.example.com',
+            apiId: 'id',
+            apiKey: 'key',
+            channelId: 'ch',
+            pollIntervalSeconds: 30,
+        };
+        const props = {
+            ...baseProps,
+            value: JSON.stringify([backend]),
+        };
+        const wrapper = shallow(<BackendSettings {...props}/>);
+
+        expect(wrapper.find(BackendList)).toHaveLength(1);
+        expect(wrapper.find(BackendList).prop('backends')).toEqual([backend]);
+    });
+
+    it('should treat blank JSON string as no backends', () => {
+        const props = {
+            ...baseProps,
+            value: '   ',
+        };
+        const wrapper = shallow(<BackendSettings {...props}/>);
+
+        expect(wrapper.find(NoBackendsPage)).toHaveLength(1);
+    });
+
     it('should call onChange and setSaveNeeded when backends change', () => {
         const backend: BackendConfig = {
             id: '1',

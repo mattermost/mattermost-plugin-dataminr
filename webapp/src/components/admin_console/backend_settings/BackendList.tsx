@@ -12,6 +12,8 @@ import type {BackendConfig, BackendStatus} from './types';
 import {mergeBackendStatus} from './types';
 import type {ValidationErrors} from './validation';
 
+import {newBackendUUID} from '../../../utils/random_id';
+
 const defaultNewBackend: Omit<BackendConfig, 'id'> = {
     name: '',
     type: 'dataminr',
@@ -33,7 +35,7 @@ type Props = {
 const BackendList = (props: Props) => {
     const addNewBackend = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        const id = crypto.randomUUID();
+        const id = newBackendUUID();
         props.onChange([
             ...props.backends,
             {

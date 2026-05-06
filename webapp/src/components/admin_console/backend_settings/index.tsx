@@ -6,15 +6,18 @@ import styled from 'styled-components';
 
 import BackendList from './BackendList';
 import NoBackendsPage from './NoBackendsPage';
+import {normalizeBackendsValue} from './normalize_backends_value';
 import type {BackendConfig} from './types';
 import {useBackendStatus} from './useBackendStatus';
 import {validateBackendConfig, hasValidationErrors, type ValidationErrors} from './validation';
+
+import {newBackendUUID} from '../../../utils/random_id';
 
 type Props = {
     id: string;
     label: string;
     helpText: React.ReactNode;
-    value: BackendConfig[];
+    value: unknown;
     disabled: boolean;
     config?: any;
     currentState?: any;
@@ -27,7 +30,7 @@ type Props = {
 };
 
 const BackendSettings = (props: Props) => {
-    const backends = props.value || [];
+    const backends = normalizeBackendsValue(props.value);
     const {statusMap} = useBackendStatus();
 
     // Validation errors shown after save attempt or on component mount
@@ -102,7 +105,7 @@ const BackendSettings = (props: Props) => {
     }, [backends, props.registerSaveAction, props.unRegisterSaveAction]);
 
     const handleAddBackend = () => {
-        const id = crypto.randomUUID();
+        const id = newBackendUUID();
         const newBackend: BackendConfig = {
             id,
             name: '',
@@ -140,9 +143,14 @@ const BackendSettings = (props: Props) => {
 };
 
 const Container = styled.div`
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 100%;
+    min-height: 200px;
+    align-self: stretch;
+    flex: 1 1 auto;
 `;
 
 export default BackendSettings;
