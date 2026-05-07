@@ -163,6 +163,22 @@ export function hasValidationErrors(errors: ValidationErrors): boolean {
 }
 
 /**
+ * Runs validateBackendConfig for each backend and returns only entries with errors.
+ */
+export function collectBackendValidationErrors(
+    backends: BackendConfig[],
+): Record<string, ValidationErrors> {
+    const errors: Record<string, ValidationErrors> = {};
+    for (const backend of backends) {
+        const backendErrors = validateBackendConfig(backend, backends);
+        if (hasValidationErrors(backendErrors)) {
+            errors[backend.id] = backendErrors;
+        }
+    }
+    return errors;
+}
+
+/**
  * Validates a single field of a backend configuration.
  * Returns an error message string, or undefined if valid.
  */
