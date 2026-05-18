@@ -70,7 +70,10 @@ describe('BackendSettings', () => {
 
     it('should render empty state when value is undefined', () => {
         const wrapper = shallow(
-            <BackendSettings {...baseProps} value={undefined}/>,
+            <BackendSettings
+                {...baseProps}
+                value={undefined}
+            />,
         );
 
         expect(wrapper.find(NoBackendsPage)).toHaveLength(1);

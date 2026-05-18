@@ -1,6 +1,6 @@
 module github.com/mattermost/mattermost-plugin-dataminr
 
-go 1.24.3
+go 1.25
 
 require (
 	github.com/biter777/countries v1.7.5
