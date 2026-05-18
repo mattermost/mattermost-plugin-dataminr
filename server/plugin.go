@@ -67,11 +67,11 @@ func (p *Plugin) OnActivate() error {
 		botDisplayName = "Dataminr Alerts"
 	}
 
-	botID, err := p.API.EnsureBotUser(&model.Bot{
+	botID, err := p.client.Bot.EnsureBot(&model.Bot{
 		Username:    botUsername,
 		DisplayName: botDisplayName,
 		Description: "Bot for posting Dataminr alerts to Mattermost channels",
-	})
+	}, pluginapi.ProfileImagePath("assets/profile.png"))
 	if err != nil {
 		return errors.Wrap(err, "failed to ensure bot user")
 	}

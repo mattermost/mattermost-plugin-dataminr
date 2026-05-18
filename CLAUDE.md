@@ -16,7 +16,7 @@ Real-time alerting system that integrates Dataminr First Alert API with Mattermo
 2. **Resilience**: Backend failures don't affect other backends or plugin stability
 3. **Extensibility**: Architecture supports future backend types beyond Dataminr
 4. **Cluster-Aware**: Uses Mattermost's cluster scheduled job system to ensure only one server polls in multi-server deployments
-5. **Deduplication**: Plugin-level deduplicator (24hr TTL) shared across all backends prevents duplicate alerts globally
+5. **Deduplication**: Plugin-level deduplicator (24hr TTL) shared across backends prevents duplicate posts to the same channel while allowing the same alert to multiple channels
 
 ---
 
@@ -52,8 +52,8 @@ Backends are configured via `plugin.json` settings as a JSON array. Each backend
 
 ### Duplicate Alert Prevention
 
-**Plugin-level deduplicator** (24hr TTL) prevents duplicates across all backends:
-- Namespaced IDs (e.g., "dataminr:12345") prevent cross-backend collisions
+**Plugin-level deduplicator** (24hr TTL) prevents duplicate posts to the **same Mattermost channel** (including when multiple backends target that channel):
+- Cache keys include backend type, alert id, and destination channel id (e.g., `dataminr:12345:channelId`) so the same alert can be posted to different channels independently
 - Duplicates MAY occur if:
   - Backend disabled >24 hours (cache expired) then re-enabled
   - Plugin deactivated/server reboot (cache cleared, but cursor preserved)

@@ -31,8 +31,8 @@ func newMockDeduplicator() *mockDeduplicator {
 	}
 }
 
-func (m *mockDeduplicator) RecordAlert(backendType, alertID string) bool {
-	key := backendType + ":" + alertID
+func (m *mockDeduplicator) RecordAlert(backendType, alertID, channelID string) bool {
+	key := backendType + ":" + alertID + ":" + channelID
 	if _, exists := m.seen[key]; exists {
 		return false
 	}

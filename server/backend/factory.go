@@ -16,12 +16,12 @@ type AlertPoster interface {
 	PostAlert(alert Alert, channelID string) error
 }
 
-// Deduplicator is an interface for tracking seen alert IDs across all backends.
-// This allows backends to prevent duplicate alert processing without managing their own caches.
+// Deduplicator is an interface for tracking seen alerts per destination Mattermost channel
+// across backends (shared cache), so duplicate posts to the same channel are suppressed.
 type Deduplicator interface {
-	// RecordAlert atomically checks if an alert is new and marks it as seen if so.
+	// RecordAlert atomically checks if an alert is new for the given destination channel and marks it as seen if so.
 	// Returns true if this is a new alert (successfully recorded), false if it's a duplicate.
-	RecordAlert(backendType, alertID string) bool
+	RecordAlert(backendType, alertID, channelID string) bool
 }
 
 // DisableCallback is a function type for disabling a backend when it reaches MaxConsecutiveFailures.

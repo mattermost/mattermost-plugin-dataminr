@@ -38,7 +38,7 @@ func (p *AlertProcessor) ProcessAlerts(alerts []Alert) (int, error) {
 
 	for _, alert := range alerts {
 		// Atomically check and record alert (prevents race conditions)
-		isNew := p.deduplicator.RecordAlert(p.backendType, alert.AlertID)
+		isNew := p.deduplicator.RecordAlert(p.backendType, alert.AlertID, p.channelID)
 		if !isNew {
 			p.api.Log.Debug("Skipping duplicate alert", "backendType", p.backendType, "alertId", alert.AlertID)
 			continue

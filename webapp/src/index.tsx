@@ -15,8 +15,9 @@ export default class Plugin {
     public async initialize(registry: PluginRegistry, store: Store<GlobalState, Action<Record<string, unknown>>>) {
         // @see https://developers.mattermost.com/extend/plugins/webapp/reference/
 
-        // Register the custom admin console setting for backend configurations
-        registry.registerAdminConsoleCustomSetting('Backends', BackendSettings);
+        // showTitle uses the standard admin two-column layout (label left, control right).
+        // Without it, nested flex layouts in System Console can collapse to zero height in the desktop app webview.
+        registry.registerAdminConsoleCustomSetting('Backends', BackendSettings, {showTitle: true});
     }
 }
 
