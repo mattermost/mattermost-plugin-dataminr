@@ -1,3 +1,6 @@
+// Copyright (c) 2025-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package dataminr
 
 import (
@@ -232,7 +235,7 @@ func TestPoller_handlePollError_MaxFailures(t *testing.T) {
 	currentFailures := backend.MaxConsecutiveFailures - 1
 
 	// Mocks for setting up initial failure count (IncrementFailures calls in the setup loop)
-	for i := 0; i < backend.MaxConsecutiveFailures-1; i++ {
+	for range backend.MaxConsecutiveFailures - 1 {
 		api.On("KVGet", "backend_test-id_failures").Return(nil, nil).Once()
 		api.On("KVSet", "backend_test-id_failures", mock.Anything).Return(nil).Once()
 	}
@@ -254,7 +257,7 @@ func TestPoller_handlePollError_MaxFailures(t *testing.T) {
 	)
 
 	// Set failure count to just below threshold
-	for i := 0; i < backend.MaxConsecutiveFailures-1; i++ {
+	for range backend.MaxConsecutiveFailures - 1 {
 		_, err := stateStore.IncrementFailures()
 		assert.NoError(t, err)
 	}

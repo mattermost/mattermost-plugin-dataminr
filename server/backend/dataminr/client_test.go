@@ -1,3 +1,6 @@
+// Copyright (c) 2025-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package dataminr
 
 import (
@@ -22,7 +25,7 @@ func createTestServerWithAuth(alertsHandler http.HandlerFunc) *httptest.Server {
 		if r.URL.Path == "/auth/1/userAuthorization" && r.Method == http.MethodPost {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
-			_ = json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]any{
 				"authorizationToken": "test-token",
 				"expirationTime":     time.Now().Add(1 * time.Hour).UnixMilli(),
 			})

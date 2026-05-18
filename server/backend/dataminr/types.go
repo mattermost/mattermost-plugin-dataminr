@@ -1,3 +1,6 @@
+// Copyright (c) 2025-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package dataminr
 
 import (
@@ -101,8 +104,8 @@ func (r *Alert) UnmarshalJSON(data []byte) error {
 	// Without this alias, calling json.Unmarshal on Alert would invoke this method again
 	type Alias Alert
 	aux := &struct {
-		EventTimeMs int64         `json:"eventTime"`
-		LocationRaw []interface{} `json:"estimatedEventLocation"`
+		EventTimeMs int64 `json:"eventTime"`
+		LocationRaw []any `json:"estimatedEventLocation"`
 		*Alias
 	}{
 		Alias: (*Alias)(r),
