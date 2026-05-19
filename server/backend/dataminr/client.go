@@ -1,3 +1,6 @@
+// Copyright (c) 2025-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package dataminr
 
 import (
@@ -60,7 +63,7 @@ func (c *APIClient) FetchAlerts(cursor string) (*AlertsResponse, error) {
 	if err != nil {
 		return nil, fmt.Errorf("alerts request failed: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	// Handle various HTTP error responses
 	switch resp.StatusCode {

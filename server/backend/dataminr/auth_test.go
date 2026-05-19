@@ -1,3 +1,6 @@
+// Copyright (c) 2025-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package dataminr
 
 import (
@@ -42,7 +45,7 @@ func TestAuthManager_GetValidToken_SuccessfulAuthentication(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 
 		// Manually construct JSON with expirationTime in milliseconds
-		jsonResp := map[string]interface{}{
+		jsonResp := map[string]any{
 			"authorizationToken": resp.AuthorizationToken,
 			"expirationTime":     expiryTime.UnixNano() / int64(time.Millisecond),
 			"TOS":                resp.TOS,
@@ -133,7 +136,7 @@ func TestAuthManager_GetValidToken_RefreshesExpiringToken(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 
-		jsonResp := map[string]interface{}{
+		jsonResp := map[string]any{
 			"authorizationToken": "refreshed_token_99999",
 			"expirationTime":     newExpiry.UnixNano() / int64(time.Millisecond),
 		}
@@ -238,7 +241,7 @@ func TestAuthManager_Authenticate_MissingToken(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 
 		// Empty response
-		_ = json.NewEncoder(w).Encode(map[string]interface{}{})
+		_ = json.NewEncoder(w).Encode(map[string]any{})
 	}))
 	defer server.Close()
 

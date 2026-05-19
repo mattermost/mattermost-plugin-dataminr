@@ -1,3 +1,6 @@
+// Copyright (c) 2025-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package dataminr
 
 import (
@@ -77,7 +80,7 @@ func (a *AuthManager) authenticate() (string, time.Time, error) {
 	if err != nil {
 		return "", time.Time{}, fmt.Errorf("authentication request failed: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		var authErr AuthError

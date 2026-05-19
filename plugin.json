@@ -2,11 +2,10 @@
     "id": "com.mattermost.plugin-dataminr",
     "name": "Mattermost Dataminr Plugin",
     "description": "Real-time alerting system that integrates Dataminr First Alert API with Mattermost.",
-    "version": "0.9.3",
     "homepage_url": "https://github.com/mattermost/mattermost-plugin-dataminr",
     "support_url": "https://github.com/mattermost/mattermost-plugin-dataminr/issues",
     "icon_path": "assets/dataminr-icon.svg",
-    "min_server_version": "6.2.1",
+    "min_server_version": "10.7.0",
     "server": {
         "executables": {
             "linux-amd64": "server/dist/plugin-linux-amd64",

@@ -1,3 +1,6 @@
+// Copyright (c) 2025-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package main
 
 import (
@@ -206,7 +209,7 @@ func TestDeduplicator(t *testing.T) {
 
 		// Writer goroutine
 		go func() {
-			for i := 0; i < 100; i++ {
+			for i := range 100 {
 				dedup.RecordAlert("dataminr", "alert-"+strconv.Itoa(i), testDedupChannelID)
 			}
 			done <- struct{}{}
@@ -214,7 +217,7 @@ func TestDeduplicator(t *testing.T) {
 
 		// Reader goroutine (also uses RecordAlert since it's atomic)
 		go func() {
-			for i := 0; i < 100; i++ {
+			for i := range 100 {
 				dedup.RecordAlert("other-backend", "alert-"+strconv.Itoa(i), testDedupChannelID)
 			}
 			done <- struct{}{}

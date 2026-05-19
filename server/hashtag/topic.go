@@ -1,3 +1,6 @@
+// Copyright (c) 2025-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package hashtag
 
 import "strings"
@@ -31,9 +34,9 @@ func extractTopicTags(topics []string) []string {
 		}
 
 		// Split on " - " delimiter (category - subcategory)
-		segments := strings.Split(topic, " - ")
+		segments := strings.SplitSeq(topic, " - ")
 
-		for _, segment := range segments {
+		for segment := range segments {
 			segment = strings.TrimSpace(segment)
 			if segment == "" {
 				continue

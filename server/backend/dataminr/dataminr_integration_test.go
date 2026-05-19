@@ -1,3 +1,6 @@
+// Copyright (c) 2025-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package dataminr
 
 import (
@@ -347,7 +350,7 @@ func TestDataminrBackend_ErrorHandling(t *testing.T) {
 		require.NoError(t, err)
 
 		// Trigger poll cycles that will fail
-		for i := 0; i < backend.MaxConsecutiveFailures-1; i++ {
+		for i := range backend.MaxConsecutiveFailures - 1 {
 			pollCallback()
 
 			// Check failure count incremented
